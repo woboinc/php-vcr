@@ -101,7 +101,10 @@ class CurlHelper
             case 0: // 0 == array of all curl options
                 $info = array();
                 foreach (self::$curlInfoList as $option => $key) {
-                   $info[$key] = $response->getCurlInfo($key);
+                   $info[$key] = $response->getInfo($option);
+                   if ($key == 'http_code' && empty($info[$key])) {
+                        $info[$key] = $response->getStatusCode();
+                   }
                 }
                 break;
             case CURLINFO_HTTP_CODE:
