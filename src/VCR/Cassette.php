@@ -33,9 +33,9 @@ class Cassette
     /**
      * Creates a new cassette.
      *
-     * @param  string            $name    Name of the cassette.
-     * @param  Configuration     $config  Configuration to use for this cassette.
-     * @param  Storage           $storage Storage to use for requests and responses.
+     * @param  string           $name    Name of the cassette.
+     * @param  Configuration    $config  Configuration to use for this cassette.
+     * @param  Storage          $storage Storage to use for requests and responses.
      * @throws \VCR\VCRException If cassette name is in an invalid format.
      */
     public function __construct($name, Configuration $config, Storage $storage)
@@ -108,6 +108,16 @@ class Cassette
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Returns true if the cassette was created recently.
+     *
+     * @return boolean
+     */
+    public function isNew()
+    {
+        return $this->storage->isNew();
     }
 
     /**

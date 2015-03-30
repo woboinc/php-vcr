@@ -65,8 +65,9 @@ class Configuration
      * @var array List of available storages.
      */
     private $availableStorages = array(
-        'json' => 'VCR\Storage\Json',
-        'yaml' => 'VCR\Storage\Yaml',
+        'blackhole' => 'VCR\Storage\Blackhole',
+        'json'      => 'VCR\Storage\Json',
+        'yaml'      => 'VCR\Storage\Yaml',
     );
 
     /**
@@ -118,6 +119,29 @@ class Configuration
      * @var array A blacklist is a list of paths.
      */
     private $blackList = array('src/VCR/LibraryHooks/', 'src/VCR/Util/SoapClient', 'tests/VCR/Filter');
+
+    /**
+     * The mode which determines how requests are handled. One of the MODE constants.
+     *
+     * @var string Current mode
+     */
+    private $mode = VCR::MODE_NEW_EPISODES;
+
+    /**
+     * List of available modes.
+     *
+     * Format:
+     * array(
+     *  'name'
+     * )
+     *
+     * @var array List of available modes.
+     */
+    private $availableModes = array(
+        VCR::MODE_NEW_EPISODES,
+        VCR::MODE_ONCE,
+        VCR::MODE_NONE,
+    );
 
     /**
      * Returns the current blacklist.
@@ -263,6 +287,9 @@ class Configuration
      * Enables specified RequestMatchers by its name.
      *
      * @param array $matchers List of RequestMatcher names to enable.
+     * 
+     * @return Configuration
+     *
      * @throws \InvalidArgumentException If a specified request matcher does not exist.
      */
     public function enableRequestMatchers(array $matchers)
@@ -272,6 +299,8 @@ class Configuration
             throw new \InvalidArgumentException("Request matchers don't exist: " . join(', ', $invalidMatchers));
         }
         $this->enabledRequestMatchers = $matchers;
+        
+        return $this;
     }
 
     /**
@@ -312,6 +341,31 @@ class Configuration
         $paths = (is_array($paths)) ? $paths : array($paths);
 
         $this->whiteList = $paths;
+
+        return $this;
+    }
+
+   /**
+     * Returns the current mode.
+     *
+     * @return string
+     */
+    public function getMode()
+    {
+        return $this->mode;
+    }
+
+    /**
+     * Sets the current mode.
+     *
+     * @param string $mode The mode to set VCR to
+     *
+     * @return Configuration
+     */
+    public function setMode($mode)
+    {
+        Assertion::choice($mode, $this->availableModes, "Mode '{$mode}' does not exist.");
+        $this->mode = $mode;
 
         return $this;
     }
