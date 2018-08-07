@@ -286,6 +286,23 @@ class CurlHook implements LibraryHook
     }
 
     /**
+     * Return the content of a cURL handle if CURLOPT_RETURNTRANSFER is set
+     *
+     * @link http://www.php.net/manual/en/function.curl-multi-getcontent.php
+     * @param resource $curlHandle  A cURL handle returned by curl_init().
+     *
+     * @return integer Return the content of a cURL handle if CURLOPT_RETURNTRANSFER is set
+     */
+    public static function curlMultiGetContent($curlHandle)
+    {
+        return CurlHelper::handleOutput(
+            self::$responses[(int) $curlHandle],
+            self::$curlOptions[(int) $curlHandle],
+            $curlHandle
+        );
+    }
+
+    /**
      * Get information regarding a specific transfer.
      *
      * @link http://www.php.net/manual/en/function.curl-getinfo.php
